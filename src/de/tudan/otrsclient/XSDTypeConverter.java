@@ -3,7 +3,7 @@ package de.tudan.otrsclient;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
+import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,6 +73,8 @@ public class XSDTypeConverter {
 			} catch (ParseException e) {
 				log.error("Failed to parse date: {}", obj, e);
 			}
+		} else if (xsdType.equals("xsd:base64binary")) {
+			return new String(Base64.decodeBase64(obj.getBytes()));
 		}
 		return obj;
 	}
