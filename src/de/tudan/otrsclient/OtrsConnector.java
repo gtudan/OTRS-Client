@@ -87,7 +87,7 @@ public class OtrsConnector {
 		dispatch.addChildElement("Method").addTextNode(method)
 				.setAttribute("xsi:type", "xsd:string");
 
-		String[] keys = params.keySet().toArray(new String[0]);
+		String[] keys = params.keySet().toArray(new String[params.keySet().size()]);
 
 		for (int i = 0; i < keys.length; i++) {
 			String key = keys[i];
@@ -100,13 +100,16 @@ public class OtrsConnector {
 				SOAPElement element = new SoapArrayFactory().createSoapArray(
 						"Param" + i + "_Value", Arrays.asList(params.get(key)));
 				dispatch.addChildElement(element);
-
-			} else if (params.get(key) instanceof Collection<?>) {
-				SOAPElement element = new SoapArrayFactory()
-						.createSoapArray("Param" + i + "_Value",
-								(Collection<?>) params.get(key));
-				dispatch.addChildElement(element);
-
+            // collections will also be encoded as array
+            } else if (params.get(key) instanceof Collection<?>) {
+                SOAPElement element = new SoapArrayFactory()
+                        .createSoapArray("Param" + i + "_Value",
+                                (Collection<?>) params.get(key));
+                dispatch.addChildElement(element);
+            // maps need special encoding as well
+            } else if (params.get(key) instanceof Map<?, ?>) {
+                SOAPElement element = new SoapMapFactory().createSoapMap("Param" + i + "_Value", (Map<?, ?>) params.get(key));
+                dispatch.addChildElement(element);
 				// or a simple node
 			} else {
 				String xsdType = XSDTypeConverter.simpleTypeForObject(params
