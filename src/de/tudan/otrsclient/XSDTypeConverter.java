@@ -3,7 +3,8 @@ package de.tudan.otrsclient;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
+import org.apache.commons.codec.binary.Base64;
+import java.io.UnsupportedEncodingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -74,7 +75,11 @@ public class XSDTypeConverter {
                 log.error("Failed to parse date: {}", obj, e);
             }
         } else if (xsdType.equals("xsd:base64binary")) {
-            return javax.xml.bind.DatatypeConverter.printBase64Binary(obj.getBytes());
+            try {
+    			return new String(Base64.decodeBase64(obj.getBytes()), "UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				log.error(e.getStackTrace().toString());
+			}
         } else {
             log.warn("Could not convert data type {}.", xsdType);
         }
