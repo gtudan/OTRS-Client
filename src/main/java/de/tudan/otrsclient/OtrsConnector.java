@@ -18,18 +18,23 @@ import java.util.Map;
 
 public class OtrsConnector {
 
-	final URL OTRS_URL;
-	final String OTRS_USER;
-	final String OTRS_PASS;
+	private final URL otrsUrl;
+	private final String otrsUser;
+	private final String otrsPass;
 
 	private Logger log = LoggerFactory.getLogger(getClass());
 
 	public OtrsConnector(String otrsUrl, String otrsUser, String otrsPass)
 			throws MalformedURLException {
 		super();
-		OTRS_URL = new URL(otrsUrl);
-		OTRS_USER = otrsUser;
-		OTRS_PASS = otrsPass;
+		this.otrsUrl = new URL(otrsUrl);
+		this.otrsUser = otrsUser;
+		this.otrsPass = otrsPass;
+	}
+
+	public SOAPMessage dispatchCall(String object, String method)
+			throws SOAPException, IOException {
+		return this.dispatchCall(object, method, new HashMap<String, Object>());
 	}
 
 	private SOAPMessage buildRPCMessage() throws SOAPException {
@@ -52,9 +57,9 @@ public class OtrsConnector {
 		SOAPBody body = env.getBody();
 		SOAPBodyElement dispatch = body.addBodyElement(new QName("/Core",
 				"Dispatch"));
-		dispatch.addChildElement("Username").addTextNode(OTRS_USER)
+		dispatch.addChildElement("Username").addTextNode(otrsUser)
 				.setAttribute("xsi:type", "xsd:string");
-		dispatch.addChildElement("Password").addTextNode(OTRS_PASS)
+		dispatch.addChildElement("Password").addTextNode(otrsPass)
 				.setAttribute("xsi:type", "xsd:string");
 
 		return msg;
@@ -118,7 +123,7 @@ public class OtrsConnector {
 
 		SOAPConnectionFactory scf = SOAPConnectionFactory.newInstance();
 		SOAPConnection conn = scf.createConnection();
-		SOAPMessage answerMsg = conn.call(msg, OTRS_URL);
+		SOAPMessage answerMsg = conn.call(msg, otrsUrl);
 
 		logMessage(answerMsg);
 		return answerMsg;
@@ -134,10 +139,5 @@ public class OtrsConnector {
 			String soapMsg = new String(byteArray, StandardCharsets.UTF_8);
 			log.debug(soapMsg);
 		}
-	}
-
-	public SOAPMessage dispatchCall(String object, String method)
-			throws SOAPException, IOException {
-		return this.dispatchCall(object, method, new HashMap<String, Object>());
 	}
 }
