@@ -13,7 +13,7 @@ import java.util.Map;
  * @author tschechniker
  * @author Gregor Tudan
  */
-public class SoapMapFactory {
+class SoapMapFactory {
 	protected SOAPElement createSoapMap(String name, Map<?, ?> values)
 			throws DOMException, SOAPException {
 		SOAPElement element = SOAPFactory.newInstance().createElement(name);

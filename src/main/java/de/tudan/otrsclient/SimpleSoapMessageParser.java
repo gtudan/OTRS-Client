@@ -46,7 +46,7 @@ public class SimpleSoapMessageParser {
 	}
 
 	public Map<String, Object> nodesToMap(SOAPMessage msg) throws SOAPException {
-		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<>();
 
 		Document doc = msg.getSOAPPart().getEnvelope().getBody().extractContentAsDocument();
 		Element el = doc.getDocumentElement();

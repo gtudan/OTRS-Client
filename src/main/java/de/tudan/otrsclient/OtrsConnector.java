@@ -22,7 +22,7 @@ public class OtrsConnector {
 	private final String otrsUser;
 	private final String otrsPass;
 
-	private Logger log = LoggerFactory.getLogger(getClass());
+	private final Logger log = LoggerFactory.getLogger(getClass());
 
 	public OtrsConnector(String otrsUrl, String otrsUser, String otrsPass)
 			throws MalformedURLException {

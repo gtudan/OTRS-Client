@@ -10,13 +10,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Utility for converting java datatypes to xml-schema and back
+ * Utility for converting java data types to xml-schema and back
  *
  * @author Gregor Tudan
  */
-public class XSDTypeConverter {
+class XSDTypeConverter {
 
-	private static Logger log = LoggerFactory.getLogger(XSDTypeConverter.class);
+	private static final Logger LOG = LoggerFactory.getLogger(XSDTypeConverter.class);
 
 	/**
 	 * Returns the xsd simple Type for the given Object
@@ -27,7 +27,7 @@ public class XSDTypeConverter {
 	 * @param obj object to get type for
 	 * @return xsd:simple type
 	 */
-	public static String simpleTypeForObject(Object obj) {
+	static String simpleTypeForObject(Object obj) {
 		if (obj instanceof String) {
 			return "xsd:string";
 		} else if (obj instanceof Long) {
@@ -52,7 +52,7 @@ public class XSDTypeConverter {
 	 * @param xsdType the xsd-type
 	 * @return java object matching the given type
 	 */
-	public static Object convertXSDToObject(String obj, String xsdType) {
+	static Object convertXSDToObject(String obj, String xsdType) {
 		xsdType = xsdType.toLowerCase();
 
 		switch (xsdType) {
@@ -74,13 +74,13 @@ public class XSDTypeConverter {
 				try {
 					return new SimpleDateFormat("yyyy-MM-dd").parse(obj);
 				} catch (ParseException e) {
-					log.error("Failed to parse date: {}", obj, e);
+					LOG.error("Failed to parse date: {}", obj, e);
 				}
 				break;
 			case "xsd:base64binary":
 				return new String(Base64.decodeBase64(obj.getBytes()), StandardCharsets.UTF_8);
 			default:
-				log.warn("Could not convert data type {}.", xsdType);
+				LOG.warn("Could not convert data type {}.", xsdType);
 				break;
 		}
 		return obj;

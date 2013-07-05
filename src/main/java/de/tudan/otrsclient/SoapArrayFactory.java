@@ -12,9 +12,9 @@ import java.util.Collection;
  *
  * @author Gregor Tudan
  */
-public class SoapArrayFactory {
+class SoapArrayFactory {
 
-	protected <T> SOAPElement createSoapArray(String name, Collection<T> values)
+	<T> SOAPElement createSoapArray(String name, Collection<T> values)
 			throws DOMException, SOAPException {
 		SOAPElement element = SOAPFactory.newInstance().createElement(name);
 
