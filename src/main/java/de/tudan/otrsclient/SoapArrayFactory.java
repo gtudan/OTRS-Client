@@ -1,16 +1,15 @@
 package de.tudan.otrsclient;
 
-import java.util.Collection;
+import org.w3c.dom.DOMException;
 
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPFactory;
-
-import org.w3c.dom.DOMException;
+import java.util.Collection;
 
 /**
  * Utility to create SoapEncoded Arrays from Collections
- * 
+ *
  * @author Gregor Tudan
  */
 public class SoapArrayFactory {
@@ -27,7 +26,7 @@ public class SoapArrayFactory {
 			type = "xsi:string";
 		}
 
-		element.setAttribute("soapenc:arrayType", type + "[" + values.size()+ "]");
+		element.setAttribute("soapenc:arrayType", type + "[" + values.size() + "]");
 		element.setAttribute("xsi:type", "soapenc:Array");
 
 		for (T s : values) {
