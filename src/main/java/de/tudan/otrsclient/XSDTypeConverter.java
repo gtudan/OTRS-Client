@@ -1,8 +1,10 @@
 package de.tudan.otrsclient;
 
+import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -53,30 +55,33 @@ public class XSDTypeConverter {
 	public static Object convertXSDToObject(String obj, String xsdType) {
 		xsdType = xsdType.toLowerCase();
 
-		if (xsdType.equals("xsd:string")) {
-			return obj;
-		} else if (xsdType.equals("xsd:long")) {
-			return Long.valueOf(obj);
-		} else if (xsdType.equals("xsd:integer")) {
-			return Integer.valueOf(obj);
-		} else if (xsdType.equals("xsd:int")) {
-			return Integer.valueOf(obj);
-		} else if (xsdType.equals("xsd:float")) {
-			return Float.valueOf(obj);
-		} else if (xsdType.equals("xsd:boolean")) {
-			return Boolean.valueOf(obj);
-		} else if (xsdType.equals("xsd:decimal")) {
-			return Long.valueOf(obj);
-		} else if (xsdType.equals("xsd:date")) {
-			try {
-				return new SimpleDateFormat("yyyy-MM-dd").parse(obj);
-			} catch (ParseException e) {
-				log.error("Failed to parse date: {}", obj, e);
-			}
-		} else if (xsdType.equals("xsd:base64binary")) {
-			return javax.xml.bind.DatatypeConverter.printBase64Binary(obj.getBytes());
-		} else {
-			log.warn("Could not convert data type {}.", xsdType);
+		switch (xsdType) {
+			case "xsd:string":
+				return obj;
+			case "xsd:long":
+				return Long.valueOf(obj);
+			case "xsd:integer":
+				return Integer.valueOf(obj);
+			case "xsd:int":
+				return Integer.valueOf(obj);
+			case "xsd:float":
+				return Float.valueOf(obj);
+			case "xsd:boolean":
+				return Boolean.valueOf(obj);
+			case "xsd:decimal":
+				return Long.valueOf(obj);
+			case "xsd:date":
+				try {
+					return new SimpleDateFormat("yyyy-MM-dd").parse(obj);
+				} catch (ParseException e) {
+					log.error("Failed to parse date: {}", obj, e);
+				}
+				break;
+			case "xsd:base64binary":
+				return new String(Base64.decodeBase64(obj.getBytes()), StandardCharsets.UTF_8);
+			default:
+				log.warn("Could not convert data type {}.", xsdType);
+				break;
 		}
 		return obj;
 	}
