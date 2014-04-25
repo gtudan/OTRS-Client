@@ -26,3 +26,4 @@ This will give you an array of TicketIDs, that can be used for more sophisticate
 	// Body comes base64 encoded, we need some magic here...
 	println new String(body.decodeBase64(),'UTF-8')
 
+The library is licensed under LGPG v3.0
