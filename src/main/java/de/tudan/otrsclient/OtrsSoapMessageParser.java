@@ -6,10 +6,13 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.xml.XMLConstants;
+import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
+
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -29,8 +32,7 @@ public class OtrsSoapMessageParser {
 	}
 
 	public Object[] nodesToArray(SOAPMessage msg) throws SOAPException {
-		Document doc = msg.getSOAPPart().getEnvelope().getBody().extractContentAsDocument();
-		Element el = doc.getDocumentElement();
+		Element el = getDispatchResponse(msg.getSOAPPart().getEnvelope().getBody());
 		NodeList nl = el.getChildNodes();
 
 		Object[] results = new Object[nl.getLength()];
@@ -48,8 +50,7 @@ public class OtrsSoapMessageParser {
 	public Map<String, Object> nodesToMap(SOAPMessage msg) throws SOAPException {
 		Map<String, Object> map = new HashMap<>();
 
-		Document doc = msg.getSOAPPart().getEnvelope().getBody().extractContentAsDocument();
-		Element el = doc.getDocumentElement();
+		Element el = getDispatchResponse(msg.getSOAPPart().getEnvelope().getBody());
 		NodeList nl = el.getChildNodes();
 
 		for (int i = 0; i < (nl.getLength() / 2); i++) {
@@ -62,5 +63,29 @@ public class OtrsSoapMessageParser {
 		}
 
 		return map;
+	}
+	
+	private Element getDispatchResponse(SOAPBody body) throws SOAPException{
+		Element dispatchResponse = null;
+		try {
+			Document doc = body.extractContentAsDocument();
+			dispatchResponse = doc.getDocumentElement();
+		} catch (SOAPException e){
+			//Workaround for CustomerUserDataGet because it returns more child elements in SOAP:Body
+			@SuppressWarnings("unchecked")
+			Iterator<Element> it = body.getChildElements();
+			while(it.hasNext() && dispatchResponse == null){
+				Element tmp = it.next();
+				if(tmp.getNodeName().equals("DispatchResponse")){
+					dispatchResponse = tmp;
+				}
+			}
+			//If the DispatchResponse can still not been found throw the SOAPException
+			if(dispatchResponse == null){
+				throw e;
+			}
+		}
+		
+		return dispatchResponse;
 	}
 }
