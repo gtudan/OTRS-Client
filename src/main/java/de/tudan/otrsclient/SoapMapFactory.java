@@ -17,8 +17,8 @@ class SoapMapFactory {
 	protected SOAPElement createSoapMap(String name, Map<?, ?> values)
 			throws DOMException, SOAPException {
 		SOAPElement element = SOAPFactory.newInstance().createElement(name);
-		element.addNamespaceDeclaration("xml-soap", "http://xml.apache.org/xml-soap");
-		element.setAttribute("xsi:type", "xml-soap:Map");
+		element.addNamespaceDeclaration("ns2", "http://xml.apache.org/xml-soap");
+		element.setAttribute("xsi:type", "ns2:Map");
 		SOAPElement item = SOAPFactory.newInstance().createElement("item");
 		for (Map.Entry<?, ?> entry : values.entrySet()) {
 			item.addChildElement("key").addTextNode(entry.getKey().toString()).setAttribute("xsi:type", "xsd:string");
