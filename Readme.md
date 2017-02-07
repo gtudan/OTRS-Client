@@ -13,12 +13,12 @@ I gave it a try and came up with a generic Java utility for creating SOAP Messag
 	// Find all open tickets
 	def params = [Result:'ARRAY', Limit:100, UserID:1, StateType:['open']]
 	def msg = otrsConn.dispatchCall("TicketObject", "TicketSearch", params)
-	String[] result = new SimpleSoapMessageParser().nodesToArray(msg)
+	String[] result = new OtrsSoapMessageParser().nodesToArray(msg)
 
 This will give you an array of TicketIDs, that can be used for more sophisticated stuff. Let’s print the body of the last Article for a Ticket:
 
 	def msg2 = otrsConn.dispatchCall("TicketObject", "ArticleFirstArticle", [TicketID:0815])
-	def result2 = new SimpleSoapMessageParser().nodesToMap(msg2)   
+	def result2 = new OtrsSoapMessageParser().nodesToMap(msg2)   
 	 
 	// Accessing properties is easy using groovy, since this is a map
 	def body = result2['Body']     // or result2.Body
