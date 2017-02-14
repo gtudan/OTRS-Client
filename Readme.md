@@ -1,4 +1,4 @@
-This is a copy of my blog post on this topic. Please see (http://gregor.tudan.de/2010/04/accessing-otrs-soap-from-javagroovy/)
+[![Build Status](https://travis-ci.org/gtudan/OTRS-Client.svg?branch=master)](https://travis-ci.org/gtudan/OTRS-Client)
 
 Accessing OTRS SOAP using Java/Groovy
 =====================================
